@@ -44,28 +44,21 @@ downloadCVBtn.addEventListener('click', () => {
     document.body.removeChild(link)
 })
 
-const sections = document.querySelectorAll(".section"); // Select sections by class
-let isScrolling;
+const sections = document.querySelectorAll(".section");
 
-window.addEventListener("scroll", () => {
-    window.clearTimeout(isScrolling);
+let options = {
+    threshold: 0.6, // Detects when 60% of a section is visible
+};
+
+let observer = new IntersectionObserver((entries) => {
+    let visibleSection = entries.find(entry => entry.isIntersecting);
     
-    isScrolling = setTimeout(() => {
-        let closest = null;
-        let minDiff = Infinity;
-
-        sections.forEach(section => {
-            const rect = section.getBoundingClientRect();
-            const diff = Math.abs(rect.top);
-            if (diff < minDiff) {
-                minDiff = diff;
-                closest = section;
-            }
-        });
-
+    if (visibleSection) {
         window.scrollTo({
-            top: closest.offsetTop,
+            top: visibleSection.target.offsetTop,
             behavior: "smooth"
         });
-    }, 200);
-});
+    }
+}, options);
+
+sections.forEach(section => observer.observe(section));
