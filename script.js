@@ -44,21 +44,21 @@ downloadCVBtn.addEventListener('click', () => {
     document.body.removeChild(link)
 })
 
-const sections = document.querySelectorAll(".section");
+// const sections = document.querySelectorAll(".section");
 
-let options = {
-    threshold: 0.6, // Detects when 60% of a section is visible
-};
+// let options = {
+//     threshold: 0.6, // Detects when 60% of a section is visible
+// };
 
-let observer = new IntersectionObserver((entries) => {
-    let visibleSection = entries.find(entry => entry.isIntersecting);
+// let observer = new IntersectionObserver((entries) => {
+//     let visibleSection = entries.find(entry => entry.isIntersecting);
     
-    if (visibleSection) {
-        window.scrollTo({
-            top: visibleSection.target.offsetTop,
-            behavior: "smooth"
-        });
-    }
-}, options);
+//     if (visibleSection) {
+//         window.scrollTo({
+//             top: visibleSection.target.offsetTop,
+//             behavior: "smooth"
+//         });
+//     }
+// }, options);
 
-sections.forEach(section => observer.observe(section));
+// sections.forEach(section => observer.observe(section));
