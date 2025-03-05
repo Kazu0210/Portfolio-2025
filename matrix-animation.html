@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Moving Shapes with Shadows</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #fff; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="shapesCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('shapesCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const shapes = [];
+        const shapeCount = 50;
+        const shapeTypes = ['circle', 'square', 'triangle', 'line', 'ellipse'];
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function createShapes() {
+            for (let i = 0; i < shapeCount; i++) {
+                shapes.push({
+                    x: random(0, canvas.width),
+                    y: random(0, canvas.height),
+                    size: random(20, 50),
+                    speedX: random(-1, 1),
+                    speedY: random(-1, 1),
+                    type: shapeTypes[Math.floor(random(0, shapeTypes.length))]
+                });
+            }
+        }
+
+        function drawShape(shape) {
+            ctx.strokeStyle = '#000';
+            ctx.fillStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = 3;
+
+            ctx.beginPath();
+            if (shape.type === 'circle') {
+                ctx.arc(shape.x, shape.y, shape.size / 2, 0, Math.PI * 2);
+            } else if (shape.type === 'square') {
+                ctx.roundRect(shape.x - shape.size / 2, shape.y - shape.size / 2, shape.size, shape.size, 10);
+            } else if (shape.type === 'triangle') {
+                ctx.moveTo(shape.x, shape.y - shape.size / 2);
+                ctx.lineTo(shape.x - shape.size / 2, shape.y + shape.size / 2);
+                ctx.lineTo(shape.x + shape.size / 2, shape.y + shape.size / 2);
+                ctx.closePath();
+            } else if (shape.type === 'line') {
+                ctx.moveTo(shape.x, shape.y);
+                ctx.lineTo(shape.x + shape.size, shape.y + shape.size);
+            } else if (shape.type === 'ellipse') {
+                ctx.ellipse(shape.x, shape.y, shape.size, shape.size / 2, 0, 0, Math.PI * 2);
+            }
+
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        function updateShapes() {
+            for (const shape of shapes) {
+                shape.x += shape.speedX;
+                shape.y += shape.speedY;
+
+                if (shape.x < 0 || shape.x > canvas.width) shape.speedX *= -1;
+                if (shape.y < 0 || shape.y > canvas.height) shape.speedY *= -1;
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            shapes.forEach(drawShape);
+            updateShapes();
+            requestAnimationFrame(animate);
+        }
+
+        createShapes();
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
